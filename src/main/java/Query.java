@@ -5,6 +5,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -90,13 +91,18 @@ public class Query {
 
     public static class QueryReducer extends Reducer<DoubleWritable, LongWritable, Text, Text> {
 
+        enum CountersEnum { LIMIT_OUTPUT }
+
         @Override
         public void reduce(DoubleWritable key, Iterable<LongWritable> values, Context context) {
+            Counter counter = context.getCounter(CountersEnum.class.getName(), CountersEnum.LIMIT_OUTPUT.toString());
             String keyTemplate = "doc ";
             String valueTemplate = ": ";
             try {
+                if (counter.getValue() < 10)
                 for (LongWritable val : values)
                     context.write(new Text(keyTemplate + val), new Text(valueTemplate + String.valueOf((-1) * key.get())));
+                counter.increment(1);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -109,7 +115,7 @@ public class Query {
         Configuration confQuery = new Configuration();
         confQuery.set("vocabulary", "vocabulary");
         String query = "";
-        for (int i = 2; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             query += args[i] + " ";
         }
         confQuery.set("query", query);

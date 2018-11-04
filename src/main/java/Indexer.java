@@ -52,16 +52,17 @@ public class Indexer {
     public static class VocabularyReducer
             extends Reducer<Text, LongWritable, Text, NullWritable> {
 
+        static Long counter = 0L;
+
         @Override
         protected void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException, InterruptedException {
-            Counter counter = context.getCounter("Unique words", "values");
             HashSet<LongWritable> amounts = new HashSet<>();
             for (LongWritable v : values) {
                 amounts.add(v);
             }
 
-            VocabularyItem entry = new VocabularyItem(key.toString(), counter.getValue(), amounts.size());
-            counter.increment(1L);
+            VocabularyItem entry = new VocabularyItem(key.toString(), counter, amounts.size());
+            counter++;
             context.write(new Text(entry.createJSON()), NullWritable.get());
         }
     }

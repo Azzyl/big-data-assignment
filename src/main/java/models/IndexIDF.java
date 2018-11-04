@@ -19,6 +19,19 @@ public class IndexIDF implements Writable {
         return wordId;
     }
 
+    public void setWordId(LongWritable wordId) {
+        this.wordId = wordId;
+    }
+
+    public void setInverseDocumentFrequency(LongWritable inverseDocumentFrequency) {
+        this.InverseDocumentFrequency = inverseDocumentFrequency;
+    }
+
+    public IndexIDF() {
+        wordId = new LongWritable(0L);
+        InverseDocumentFrequency = new LongWritable(0L);
+    }
+
     public IndexIDF(LongWritable wordId, LongWritable InverseDocumentFrequency) {
         this.wordId = wordId;
         this.InverseDocumentFrequency = InverseDocumentFrequency;
