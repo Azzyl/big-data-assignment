@@ -9,10 +9,10 @@ import java.io.IOException;
 
 public class IndexIDF implements Writable {
     private LongWritable wordId;
-    private LongWritable InverseDocumentFrequency;
+    private LongWritable inverseDocumentFrequency;
 
     public LongWritable getInverseDocumentFrequency() {
-        return InverseDocumentFrequency;
+        return inverseDocumentFrequency;
     }
 
     public LongWritable getWordId() {
@@ -24,26 +24,26 @@ public class IndexIDF implements Writable {
     }
 
     public void setInverseDocumentFrequency(LongWritable inverseDocumentFrequency) {
-        this.InverseDocumentFrequency = inverseDocumentFrequency;
+        this.inverseDocumentFrequency = inverseDocumentFrequency;
     }
 
     public IndexIDF() {
         wordId = new LongWritable(0L);
-        InverseDocumentFrequency = new LongWritable(0L);
+        inverseDocumentFrequency = new LongWritable(0L);
     }
 
-    public IndexIDF(LongWritable wordId, LongWritable InverseDocumentFrequency) {
+    public IndexIDF(LongWritable wordId, LongWritable inverseDocumentFrequency) {
         this.wordId = wordId;
-        this.InverseDocumentFrequency = InverseDocumentFrequency;
+        this.inverseDocumentFrequency = inverseDocumentFrequency;
     }
 
     public void write(DataOutput dataOutput) throws IOException {
         wordId.write(dataOutput);
-        InverseDocumentFrequency.write(dataOutput);
+        inverseDocumentFrequency.write(dataOutput);
     }
 
     public void readFields(DataInput dataInput) throws IOException {
         wordId.readFields(dataInput);
-        InverseDocumentFrequency.readFields(dataInput);
+        inverseDocumentFrequency.readFields(dataInput);
     }
 }
